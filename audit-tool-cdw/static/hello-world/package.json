@@ -21,7 +21,7 @@
     "@atlaskit/empty-state": "^10.1.4",
     "@atlaskit/eslint-plugin-design-system": "^13.19.6",
     "@atlaskit/eslint-plugin-ui-styling-standard": "^1.4.4",
-    "@atlaskit/flag": "^17.3.5",
+    "@atlaskit/flag": "^17.5.3",
     "@atlaskit/form": "^12.4.0",
     "@atlaskit/icon": "^28.1.1",
     "@atlaskit/icon-object": "^7.2.2",

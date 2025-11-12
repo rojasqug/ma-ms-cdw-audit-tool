@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@forge/api": "^4.3.0",
-    "@forge/resolver": "1.7.0"
+    "@forge/resolver": "1.7.0",
+    "pdfkit": "^0.17.2"
   }
 }

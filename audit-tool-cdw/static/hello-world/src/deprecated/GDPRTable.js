@@ -47,27 +47,46 @@ function useGdprTree(projectKey, projectLabel, requestType) {
 
   const fetchTree = useCallback(async () => {
     try {
+      console.log('[GDPRTable] Starting fetch with:', { projectKey, projectLabel, requestType });
       setLoading(true);
       setError(null);
+      
       const resp = await bridge.invoke('searchCwpGdprTree', { projectKey, projectLabel, requestType });
-      if (resp?.error) throw new Error(resp.error);
-      setItems(Array.isArray(resp?.items) ? resp.items : []);
+      console.log('[GDPRTable] Bridge response:', resp);
+      
+      if (resp?.error) {
+        console.error('[GDPRTable] Response contains error:', resp.error);
+        throw new Error(resp.error);
+      }
+      
+      const itemsArray = Array.isArray(resp?.items) ? resp.items : [];
+      console.log('[GDPRTable] Setting items:', itemsArray);
+      console.log('[GDPRTable] Number of items:', itemsArray.length);
+      
+      setItems(itemsArray);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('[GDPRTable] searchCwpGdprTree failed', e);
+      console.error('[GDPRTable] Error stack:', e?.stack);
       setError(e);
     } finally {
       setLoading(false);
+      console.log('[GDPRTable] Fetch complete');
     }
   }, [projectKey, projectLabel, requestType]);
 
-  useEffect(() => { fetchTree(); }, [fetchTree]);
+  useEffect(() => { 
+    console.log('[GDPRTable] useEffect triggered, calling fetchTree');
+    fetchTree(); 
+  }, [fetchTree]);
 
   return { loading, error, items, refresh: fetchTree };
 }
 
-export default function GDPRTable({ projectKey = 'CWP', projectLabel = 'Core Workflow Privacy Request', requestType = 'GDPR' }) {
+export default function GDPRTable({ projectKey = 'CWP', projectLabel = 'Core Workflow Privacy Request', requestType = 'GDPR Request' }) {
+  console.log('[GDPRTable] Render with props:', { projectKey, projectLabel, requestType });
   const { loading, error, items, refresh } = useGdprTree(projectKey, projectLabel, requestType);
+  console.log('[GDPRTable] Current state:', { loading, error: error?.message, itemsCount: items.length });
 
   const columns = useMemo(() => ([
     { key: 'key', name: 'Key', width: 140 },
@@ -112,7 +131,13 @@ export default function GDPRTable({ projectKey = 'CWP', projectLabel = 'Core Wor
             <Button appearance="warning" onClick={refresh}>Retry</Button>
           </SectionMessage>
         )}
-        {!loading && !error && (
+        {!loading && !error && items.length === 0 && (
+          <SectionMessage appearance="information" title="No GDPR issues found">
+            <p>There are currently no GDPR Request issues in the {projectKey} project.</p>
+            <p>Debug info: projectKey={projectKey}, requestType={requestType}</p>
+          </SectionMessage>
+        )}
+        {!loading && !error && items.length > 0 && (
           <TableTree>
             <Headers>
               {columns.map(col => (

@@ -62,7 +62,7 @@ function Root() {
 
   return (
     <ErrorBoundary>
-      <AppProvider mode={mode}>
+      <AppProvider UNSAFE_theme={{ colorMode: mode }}>
         <App />
       </AppProvider>
     </ErrorBoundary>
