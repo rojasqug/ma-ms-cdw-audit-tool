@@ -43,3 +43,5 @@ venv/
 
 # Image snapshot folders (optional; uncomment if you keep snapshots in repo)
 __image_snapshots__/
+ma-ds-cdw-agent-multiqview
+ma-ds-cdw-jsm-file-uploader
